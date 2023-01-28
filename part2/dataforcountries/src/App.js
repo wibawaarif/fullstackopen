@@ -77,7 +77,6 @@ const App = () => {
     setShowDetails(false)
     setFilteredCountries(getFilteredCountries)
   }
-
   return (
     <div>
       <Countries searchController={searchController} />
