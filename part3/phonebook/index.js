@@ -14,59 +14,104 @@ morgan.token('body', req => {
 app.use(morgan(':method :url :status :response-time ms :body'))
 app.use(express.static('build'))
 
-let counter = 0
+
+const errorHandler = (error, request, response, next) => {
+  console.error('error middleware', error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+
+  next(error)
+}
 
 app.get('/api/persons',async (req, res) => {
   const fetchPeople = await Person.find({})
   return res.status(200).send(fetchPeople)
 })
 
-app.get('/info', (req, res) => {
-  counter+=1
+app.get('/info', async (req, res) => {
+  const getAllData = await Person.find({})
   const now = new Date()
-  res.status(200).send(`Phonebook has info for ${counter} people test <br/> <br/> ${now}`)
+  res.status(200).send(`Phonebook has ${getAllData.length} people <br/> <br/> ${now}`)
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  const findId = Persons.find(x => x.id === Number(req.params.id))
-  if (!findId) {
-    return res.status(404).send('Id not found')
+app.get('/api/persons/:id', async (req, res, next) => {
+  try {
+    const findId = await Person.findById(req.params.id)
+    if (!findId) {
+      return res.status(404).send('Id not found')
+    }
+    return res.status(200).send(findId)
+  } catch(err) {
+    next(err)
   }
-  return res.status(200).send(findId)
+
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-  const findId = Persons.filter(x => x.id !== Number(req.params.id))
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => next(error))
+})
 
-  if (!findId) {
-    return res.status(404).send('Id not found')
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
   }
-  return res.status(200).send(findId)
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true, runValidators: true, context: 'query' })
+    .then(updatedPerson => {
+      res.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', async (req, res) => {
+app.post('/api/persons', async (req, res, next) => {
+  if (req.body.number[2] !== '-' &&  req.body.number[3] !== '-') {
+    return res.status(400).send({
+      error: "Number must contain -"
+    })
+  }
+
   const existingPerson = await Person.findOne({name: req.body.name})
-  const {name, number} = req.body
+
   if (existingPerson) {
     return res.status(400).send({
       info: "Person already exist"
     })
   }
-  if (!name || !number) {
+  if (!req.body.name || !req.body.number) {
     return res.status(400).send({
       info: "Field must not be empty"
     })
   }
-  const person = new Person({
-    name,
-    number
-  })
 
-  await person.save()
+  try {
+    const person = new Person({
+      name: req.body.name,
+      number: req.body.number
+    })
+  
+    await person.save()
+  
+    return res.status(200).send(person)
+  } catch(err) {
+    next(err)
+  }
 
-  return res.status(200).send(person)
+  
 })
 
+
+app.use(errorHandler)
 
 
 const PORT = process.env.PORT;
