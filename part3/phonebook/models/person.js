@@ -22,8 +22,8 @@ const personSchema = new mongoose.Schema({
     minLength: 3,
   },
   number: {
-    type: Number,
-    minLength: 8,
+    type: String,
+    minLength: 9,
   }
 })
 

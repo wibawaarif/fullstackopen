@@ -75,9 +75,10 @@ app.put('/api/persons/:id', (req, res, next) => {
 })
 
 app.post('/api/persons', async (req, res, next) => {
-  if (req.body.number[2] !== '-' &&  req.body.number[3] !== '-') {
+
+  if (!req.body.name || !req.body.number) {
     return res.status(400).send({
-      error: "Number must contain -"
+      info: "Field must not be empty"
     })
   }
 
@@ -88,12 +89,12 @@ app.post('/api/persons', async (req, res, next) => {
       info: "Person already exist"
     })
   }
-  if (!req.body.name || !req.body.number) {
+
+  if (req.body.number[2] !== '-' &&  req.body.number[3] !== '-' || req.body.number[2] === '-' && req.body.number[3] === '-') {
     return res.status(400).send({
-      info: "Field must not be empty"
+      error: "Invalid number"
     })
   }
-
   try {
     const person = new Person({
       name: req.body.name,
