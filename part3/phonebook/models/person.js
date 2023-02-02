@@ -11,6 +11,7 @@ console.log('connecting to MongoDB')
 mongoose.connect(url)
   .then(result => {
     console.log('connected to MongoDB')
+    console.log(result)
   })
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
@@ -24,7 +25,7 @@ const personSchema = new mongoose.Schema({
   number: {
     type: String,
     minLength: 9,
-     validate: {
+    validate: {
       validator: function(v) {
         return /\d{3}-\d{3}/.test(v) ||  /\d{2}-\d{2}/.test(v)
       },
