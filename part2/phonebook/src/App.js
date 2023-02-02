@@ -53,7 +53,7 @@ const App = () => {
   const [notifColor, setNotifColor] = useState('')
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((res) => {
+    axios.get("http://localhost:3001/api/persons").then((res) => {
       setPersons(res.data)
       setFilteredList(res.data);
     });
@@ -97,6 +97,17 @@ const App = () => {
     };
 
     personServices.create(newInput).then((returnedData) => {
+      if (typeof(returnedData) === "string") {
+        setErrorMessage(returnedData)
+        setNotifColor('failed')
+        setShowElement(true)
+        setTimeout(() => {
+          setShowElement(false)
+        }, 3000)
+        setNewName("");
+        setNewNumber("");
+        return 
+      }
       setPersons([...persons, returnedData]);
       setFilteredList([...filteredList, returnedData]);
     });

@@ -61,7 +61,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 app.put('/api/persons/:id', (req, res, next) => {
   const body = req.body
-
+  console.log(body.number);
   const person = {
     name: body.name,
     number: body.number,
@@ -90,11 +90,6 @@ app.post('/api/persons', async (req, res, next) => {
     })
   }
 
-  if (req.body.number[2] !== '-' &&  req.body.number[3] !== '-' || req.body.number[2] === '-' && req.body.number[3] === '-') {
-    return res.status(400).send({
-      error: "Invalid number"
-    })
-  }
   try {
     const person = new Person({
       name: req.body.name,
