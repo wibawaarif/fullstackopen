@@ -15,8 +15,29 @@ const postBlog = async (props) => {
   return request.data
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
+const updateBlog = async (props) => {
+  const request = await axios.put(`${baseUrl}/${props.id}`, props, {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  return request.data
+}
+
+const deleteBlog = async (id) => {
+  const request = await axios.delete(`${baseUrl}/${id}`, {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  })
+
+  return request.data
+}
+
 export default {
   getAll,
-  postBlog
+  postBlog,
+  updateBlog,
+  deleteBlog
 }
