@@ -89,6 +89,13 @@ blogsRouter.post('/', async (req, res) => {
 
 blogsRouter.put('/:id', async (req, res) => {
   const body = req.body
+  const token = req.token;
+
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+
+  if (!(decodedToken.id && token)) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
 
   const blog = {
     title: body.title,
