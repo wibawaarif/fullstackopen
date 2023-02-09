@@ -10,9 +10,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [notifColor, setNotifColor] = useState('')
   const [showElement,setShowElement] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -41,35 +38,6 @@ const App = () => {
     window.location.reload()
   }
 
-  const blogHandler = async (event) => {
-    event.preventDefault()
-
-    const newBlogs = await blogService.postBlog({
-      title,
-      url,
-      author,
-    })
-
-    if (newBlogs) {
-      const newPost = [...blogs, {
-        title: newBlogs.title,
-        url: newBlogs.url,
-        author: newBlogs.author,
-        likes: newBlogs.likes
-      }]
-      setBlogs(newPost)
-      setErrorMessage(`a blog ${newBlogs.title} by ${newBlogs.author}`)
-      setNotifColor('success')
-      setShowElement(true)
-      setTimeout(() => {
-        setShowElement(false)
-      }, 3000)
-    }
-    setAuthor('')
-    setUrl('')
-    setTitle('')
-  }
-
   const logout = () => {
     localStorage.clear()
     window.location.reload()
@@ -89,17 +57,13 @@ const App = () => {
     <div>
       {localStorage.getItem('token') ? (
         <IndexPage
-          urlController={(event) => setUrl(event.target.value)}
-          titleController={(event) => setTitle(event.target.value)}
-          authorController={(event) => setAuthor(event.target.value)}
-          blogHandler={blogHandler}
           logout={logout}
           blogs={blogs}
           setBlogs={setBlogs}
           notif={sendNotification}
-          url={url}
-          author={author}
-          title={title}
+          setErrorMessage={setErrorMessage}
+          setNotifColor={setNotifColor}
+          setShowElement={setShowElement}
         />
       ) : (
         <LoginPage
