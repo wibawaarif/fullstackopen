@@ -33,7 +33,7 @@ const App = () => {
       setPassword('')
       return
     }
-    localStorage.setItem('name', user.name)
+    localStorage.setItem('name', user.username)
     localStorage.setItem('token', user.token)
     window.location.reload()
   }

@@ -32,11 +32,12 @@ const Blog = ({ blog, blogs, setBlogs }) => {
         <br/>
         {blog.url}
         <br/>
-        {blog.likes} <button onClick={increaseLike}>like</button>
+        {blog.likes} <button id='like-btn' onClick={increaseLike}>like</button>
+        {/* {blog.likes} <button onClick={() => console.log('test')}>like</button> */}
         <br/>
         {blog.author}
         <br/>
-        <button onClick={deleteBlog}>delete</button>
+        <button id='delete-btn' onClick={deleteBlog}>delete</button>
       </div>
     </>
   )

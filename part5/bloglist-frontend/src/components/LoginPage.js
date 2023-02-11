@@ -7,13 +7,13 @@ const LoginPage = (props) => {
       <Notification messages={props.notif.msg} showElement={props.notif.isValid} category={props.notif.category}/>
       <form onSubmit={props.formHandler}>
         <div>
-          username: <input value={props.username} onChange={props.usernameController} />
+          username: <input id='username' value={props.username} onChange={props.usernameController} />
         </div>
         <div>
-          password: <input value={props.password} type="password" onChange={props.passwordController} />
+          password: <input id='password' value={props.password} type="password" onChange={props.passwordController} />
         </div>
         <div>
-          <button type="submit">login</button>
+          <button id='login-button' type="submit">login</button>
         </div>
       </form>
     </>
