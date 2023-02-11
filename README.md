@@ -38,9 +38,16 @@ Learn React, Redux, Node.js, MongoDB, GraphQL, TypeScript, React Native, GitHub 
 - User administration
 - Token administration
 
+### [Part 5 - Testing React apps](https://fullstackopen.com/en/part5)
+
+- Login in frontend
+- props.children and proptypes
+- Testing React apps
+- End to end testing
+
 ## Course Certificates
 
-### Full Stack Certificate - Parts 0-4
+### Full Stack Certificate - Parts 0-5
 
 <p align="center">
   <img height="60%" width="100%" src="./CERTIFICATES/certificate-fullstack-development.png" alt="FullStack Certificate">
